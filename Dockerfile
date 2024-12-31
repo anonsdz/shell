@@ -22,10 +22,7 @@ WORKDIR /app
 # Copy file index.js vào container
 COPY index.js /app
 
-# Chạy npm install (nếu có file package.json)
-RUN npm install
-
-# Mở cổng 3000 cho ứng dụng Node.js
+# Mở cổng 3000 cho ứng dụng Node.js (nếu cần)
 EXPOSE 3000
 
 # Lệnh chạy ứng dụng Node.js
