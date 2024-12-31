@@ -22,7 +22,7 @@ WORKDIR /app
 # Copy file index.js vào container
 COPY index.js /app
 
-# Mở cổng 3000 cho ứng dụng Node.js (nếu cần)
+# Mở cổng 3000 cho ứng dụng Node.js
 EXPOSE 3000
 
 # Lệnh chạy ứng dụng Node.js
