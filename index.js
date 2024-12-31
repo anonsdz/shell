@@ -1,48 +1,42 @@
 const express = require('express');
-const WebSocket = require('ws');
-const SSHClient = require('ssh2').Client;
 const path = require('path');
-
-// Khởi tạo ứng dụng Express và WebSocket
+const pty = require('node-pty');
+const WebSocket = require('ws');
 const app = express();
-const wss = new WebSocket.Server({ noServer: true });
 
-// Cấu hình WebSocket server để truyền thông tin đến SSH console
-wss.on('connection', (ws) => {
-  const ssh = new SSHClient();
-
-  // Kết nối SSH trực tiếp đến container
-  ssh.on('ready', () => {
-    ssh.shell((err, stream) => {
-      if (err) return ws.send('Failed to start SSH shell.');
-
-      ws.on('message', (msg) => {
-        stream.write(msg);
-      });
-
-      stream.on('data', (data) => {
-        ws.send(data.toString());
-      });
-    });
-  })
-  .connect({
-    host: 'localhost',  // Kết nối đến SSH server trong container
-    port: 22,           // Cổng SSH mặc định trong container
-    username: 'user',   // Tên người dùng trong container
-    password: 'password' // Mật khẩu người dùng trong container
-  });
+// Tạo server HTTP để phục vụ ứng dụng web
+const server = app.listen(8080, () => {
+  console.log('Server started on http://localhost:8080');
 });
 
-// Cấu hình Express để phục vụ giao diện web
+// Cung cấp tệp static (HTML, CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// WebSocket upgrade để tương tác với SSH shell
-app.server = app.listen(8080, () => {
-  console.log('SSH Console running at http://localhost:8080');
-});
+// WebSocket để giao tiếp với terminal
+const wss = new WebSocket.Server({ server });
 
-app.server.on('upgrade', (request, socket, head) => {
-  wss.handleUpgrade(request, socket, head, (ws) => {
-    wss.emit('connection', ws, request);
+// Mở terminal khi có kết nối từ client
+wss.on('connection', (ws) => {
+  const ptyProcess = pty.spawn('bash', [], {
+    name: 'xterm-256color',
+    cols: 80,
+    rows: 30,
+    cwd: process.env.HOME,
+    env: process.env
+  });
+
+  // Gửi dữ liệu terminal tới client qua WebSocket
+  ptyProcess.on('data', (data) => {
+    ws.send(data);
+  });
+
+  // Nhận dữ liệu từ client (gửi lệnh tới terminal)
+  ws.on('message', (message) => {
+    ptyProcess.write(message);
+  });
+
+  // Đóng terminal khi client ngắt kết nối
+  ws.on('close', () => {
+    ptyProcess.kill();
   });
 });
