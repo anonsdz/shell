@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SSH Console</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
   <style>
     #terminal {
       width: 100%;
@@ -14,21 +13,18 @@
 </head>
 <body>
   <div id="terminal"></div>
-  <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xterm/4.12.0/xterm.min.js"></script>
   <script>
-    const socket = new WebSocket('ws://localhost:8080');
     const term = new Terminal();
     term.open(document.getElementById('terminal'));
 
-    socket.onopen = () => {
-      term.write('Welcome to SSH Console\n');
-    };
-
-    socket.onmessage = (event) => {
+    const socket = new WebSocket('ws://' + window.location.hostname + ':8080');
+    socket.onmessage = function(event) {
       term.write(event.data);
     };
 
-    term.onData((data) => {
+    term.onData(function(data) {
       socket.send(data);
     });
   </script>
