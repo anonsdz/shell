@@ -1,15 +1,13 @@
 {
-  "name": "ssh-console",
+  "name": "shell-console",
   "version": "1.0.0",
-  "description": "Web SSH console using xterm.js",
+  "description": "A simple shell console app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.17.1",
-    "node-pty": "^0.10.1",
-    "ws": "^7.4.6",
-    "xterm": "^4.12.0"
+    "ssh2": "^1.0.0"
   }
 }
