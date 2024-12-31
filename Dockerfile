@@ -1,17 +1,32 @@
-# Chọn base image Node.js (có thể thay đổi phiên bản nếu cần)
-FROM node:16
+# Chọn image Ubuntu mới nhất làm base
+FROM ubuntu:latest
 
-# Tạo và chuyển vào thư mục làm việc /app
+# Cập nhật danh sách package và cài đặt các công cụ cần thiết
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
+    nodejs \
+    npm \
+    python3 \
+    python3-pip \
+    curl \
+    git \
+    build-essential
+
+# Cài đặt Node.js (nếu cần cài đặt phiên bản cụ thể, bạn có thể cài đặt từ các PPA hoặc source)
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash && \
+    apt-get install -y nodejs
+
+# Tạo thư mục làm việc trong container
 WORKDIR /app
 
-# Copy tất cả các file từ thư mục hiện tại vào container
-COPY . .
+# Copy file index.js vào container
+COPY index.js /app
 
-# Cài đặt các phụ thuộc của dự án
+# Chạy npm install (nếu có file package.json)
 RUN npm install
 
-# Mở cổng 3000 (hoặc cổng mà ứng dụng của bạn sử dụng)
+# Mở cổng 3000 cho ứng dụng Node.js
 EXPOSE 3000
 
-# Chạy ứng dụng Node.js
+# Lệnh chạy ứng dụng Node.js
 CMD ["node", "index.js"]
