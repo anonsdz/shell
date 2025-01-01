@@ -1,15 +1,20 @@
-# Sử dụng Node.js phiên bản 20
-FROM node:20
+# Sử dụng image Ubuntu làm cơ sở
+FROM ubuntu:latest
 
-# Cài đặt npm phiên bản mới nhất
-RUN npm install -g npm@latest
+# Cập nhật hệ thống và cài đặt Apache, PHP, và các gói cần thiết
+RUN apt-get update && apt-get install -y \
+    apache2 \
+    php \
+    libapache2-mod-php \
+    curl \
+    ufw \
+    && apt-get clean
 
-# Cài đặt ứng dụng của bạn
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+# Mở cổng 80 để Apache có thể phục vụ các request HTTP
+EXPOSE 80
 
-# Mở cổng và chạy ứng dụng
-EXPOSE 3000
-CMD ["npm", "start"]
+# Copy mã nguồn của bạn vào thư mục của Apache
+COPY ./index.php /var/www/html/
+
+# Cấu hình Apache để chạy
+CMD service apache2 start && tail -f /dev/null
