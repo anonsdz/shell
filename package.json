@@ -1,0 +1,16 @@
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "description": "A simple Node.js app with Wetty terminal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "wetty": "^2.7.0"
+  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"
+}
