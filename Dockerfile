@@ -1,17 +1,21 @@
-# Sử dụng image Node.js chính thức từ Docker Hub
+# Sử dụng Node.js image
 FROM node:18
 
-# Cài đặt thư viện cần thiết
+# Đặt thư mục làm việc
 WORKDIR /app
+
+# Copy package.json và cài đặt dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy mã nguồn của bạn vào container
+# Copy toàn bộ mã nguồn ứng dụng
 COPY . .
 
-# Mở các cổng mà server của bạn sử dụng
-EXPOSE 3000
-EXPOSE 3001
+# Cài đặt Wetty (nếu chưa có)
+RUN npm install -g wetty
 
-# Chạy ứng dụng của bạn
-CMD ["npm", "start"]
+# Mở cổng 3000 (cho ứng dụng web) và 3001 (cho Wetty terminal)
+EXPOSE 3000 3001
+
+# Chạy ứng dụng và Wetty terminal
+CMD ["sh", "-c", "npm start & wetty --port 3001 --base /shell"]
