@@ -1,20 +1,23 @@
-# Sử dụng image Ubuntu làm cơ sở
-FROM ubuntu:latest
+# Sử dụng hình ảnh PHP với Apache
+FROM php:8.3-apache
 
-# Cập nhật hệ thống và cài đặt Apache, PHP, và các gói cần thiết
+# Cài đặt Node.js
 RUN apt-get update && apt-get install -y \
-    apache2 \
-    php \
-    libapache2-mod-php \
     curl \
-    ufw \
-    && apt-get clean
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
-# Mở cổng 80 để Apache có thể phục vụ các request HTTP
+# Kích hoạt mod_rewrite của Apache
+RUN a2enmod rewrite
+
+# Sao chép mã nguồn vào container
+COPY . /var/www/html
+
+# Thiết lập quyền
+RUN chown -R www-data:www-data /var/www/html
+
+# Mở cổng 80
 EXPOSE 80
 
-# Copy mã nguồn của bạn vào thư mục của Apache
-COPY ./index.php /var/www/html/
-
-# Cấu hình Apache để chạy
-CMD service apache2 start && tail -f /dev/null
+# Khởi động Apache
+CMD ["apache2-foreground"]
