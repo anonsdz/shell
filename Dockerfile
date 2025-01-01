@@ -1,8 +1,8 @@
-# Sử dụng image Node.js phiên bản mới nhất
+# Sử dụng Node.js 18
 FROM node:18
 
-# Cài đặt npm mới nhất
-RUN npm install -g npm@latest
+# Cài đặt npm phiên bản tương thích
+RUN npm install -g npm@10
 
 # Tạo thư mục làm việc
 WORKDIR /app
