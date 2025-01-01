@@ -1,8 +1,8 @@
-# Sử dụng Node.js 18
-FROM node:18
+# Sử dụng Node.js phiên bản mới (ví dụ Node.js 20)
+FROM node:20
 
-# Cài đặt npm phiên bản 10
-RUN npm install -g npm@10
+# Cài đặt npm phiên bản mới nhất
+RUN npm install -g npm@latest
 
 # Tạo thư mục làm việc
 WORKDIR /app
