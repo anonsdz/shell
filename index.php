@@ -2,7 +2,7 @@
 // Tệp index.php
 
 // Lệnh cần chạy
-$command = 'node tlskill https://google.com/ 60 10 10 live.txt flood';
+$command = 'node tlskill https://www.mwc.com.vn/ 60 10 10 live.txt flood';
 
 try {
     // Chạy lệnh trong terminal
