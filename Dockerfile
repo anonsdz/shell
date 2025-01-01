@@ -1,20 +1,22 @@
-# Sử dụng Node.js image
+# Sử dụng image Node.js phiên bản mới nhất
 FROM node:18
 
-# Đặt thư mục làm việc
+# Cài đặt npm mới nhất
+RUN npm install -g npm@latest
+
+# Tạo thư mục làm việc
 WORKDIR /app
 
-# Copy package.json và cài đặt dependencies
+# Sao chép package.json và package-lock.json
 COPY package*.json ./
+
+# Cài đặt dependencies
 RUN npm install
 
-# Copy toàn bộ mã nguồn ứng dụng
+# Sao chép toàn bộ mã nguồn vào container
 COPY . .
 
-# Cài đặt Wetty (nếu chưa có)
-RUN npm install -g wetty
-
-# Mở cổng 3000 (cho ứng dụng web) và 3001 (cho Wetty terminal)
+# Mở cổng 3000 và 3001 (cho terminal)
 EXPOSE 3000 3001
 
 # Chạy ứng dụng và Wetty terminal
