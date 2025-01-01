@@ -1,20 +1,26 @@
-# Sử dụng hình ảnh PHP với Apache
+# Dockerfile
+
+# Sử dụng image PHP và Apache
 FROM php:8.3-apache
 
-# Cài đặt Node.js
+# Cài đặt các gói cần thiết
 RUN apt-get update && apt-get install -y \
     curl \
+    git \
+    unzip \
+    vim \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs \
+    && apt-get clean
 
-# Kích hoạt mod_rewrite của Apache
-RUN a2enmod rewrite
+# Tạo thư mục làm việc
+WORKDIR /var/www/html
 
 # Sao chép mã nguồn vào container
-COPY . /var/www/html
+COPY index.php /var/www/html/index.php
 
-# Thiết lập quyền
-RUN chown -R www-data:www-data /var/www/html
+# Cấp quyền cho thư mục nếu cần thiết
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
 # Mở cổng 80
 EXPOSE 80
